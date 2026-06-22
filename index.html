@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="favicon.png" type="image/png" />
+        <title>BUMI Каталог</title>
+
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background: #f7f4ef;
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            .catalog {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .card {
+                background: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .card img {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+                background: #fff;
+            }
+
+            .card-content {
+                padding: 15px;
+            }
+
+            .card h3 {
+                margin: 0 0 10px;
+            }
+
+            .header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+                object-fit: contain;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <img src="logo.png" alt="logo" class="logo" />
+            <h1>BUMI CATALOG CARDS</h1>
+        </div>
+
+        <div class="catalog" id="catalog"></div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
