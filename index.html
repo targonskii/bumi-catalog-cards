@@ -87,6 +87,71 @@
                 border-color: #c97b63;
                 color: white;
             }
+            .cart-bar {
+                position: sticky;
+                top: 0;
+                background: white;
+                padding: 12px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                font-weight: bold;
+                z-index: 10;
+            }
+
+            .qty-box {
+                display: flex;
+                gap: 8px;
+                margin-top: 12px;
+            }
+
+            .qty-box button {
+                width: 32px;
+                height: 32px;
+            }
+
+            .qty-box input {
+                width: 60px;
+                text-align: center;
+            }
+
+            .add-cart-btn {
+                width: 100%;
+                margin-top: 10px;
+                padding: 10px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+            .modal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+            }
+
+            .modal-content {
+                background: white;
+                width: 90%;
+                max-width: 600px;
+                margin: 50px auto;
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .modal input,
+            .modal textarea {
+                width: 100%;
+                margin-top: 10px;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            .modal button {
+                margin-top: 10px;
+                padding: 10px;
+                width: 100%;
+            }
         </style>
     </head>
 
@@ -94,6 +159,10 @@
         <div class="header">
             <img src="logo.png" alt="logo" class="logo" />
             <h1>BUMI CATALOG CARDS</h1>
+            <div class="cart-bar" onclick="openCart()">
+                🛒 Корзина:
+                <span id="cartCounter">0</span>
+            </div>
         </div>
 
         <div id="filters" class="chips">
@@ -101,7 +170,25 @@
         </div>
 
         <div class="catalog" id="catalog"></div>
+        <div id="cartModal" class="modal">
+            <div class="modal-content">
+                <h2>Корзина</h2>
 
+                <div id="cartItems"></div>
+
+                <hr />
+
+                <input id="storeName" placeholder="Название магазина" />
+                <input id="contactName" placeholder="Контактное лицо" />
+                <input id="phone" placeholder="Телефон" />
+                <input id="email" placeholder="Email" />
+                <textarea id="comment" placeholder="Комментарий"></textarea>
+
+                <button onclick="sendOrder()">Отправить заказ</button>
+
+                <button onclick="closeCart()">Закрыть</button>
+            </div>
+        </div>
         <script src="script.js"></script>
     </body>
 </html>
