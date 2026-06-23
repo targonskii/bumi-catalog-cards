@@ -5,6 +5,9 @@ const url = `https://opensheet.elk.sh/${SHEET_ID}/Каталог%20открыт�
 let allCards = [];
 let cart = [];
 
+// =========================
+// LOAD CARDS
+// =========================
 async function loadCards() {
     const response = await fetch(url);
     const data = await response.json();
@@ -15,6 +18,9 @@ async function loadCards() {
     createCollectionChips(allCards);
 }
 
+// =========================
+// RENDER CARDS
+// =========================
 function renderCards(cards) {
     const catalog = document.getElementById("catalog");
 
@@ -23,11 +29,9 @@ function renderCards(cards) {
     cards.forEach((card) => {
         catalog.innerHTML += `
             <div class="card">
-
                 <img src="${card.ImageLink}" alt="${card.Название}">
 
                 <div class="card-content">
-
                     <h3>${card.Название}</h3>
 
                     <p><strong>Описание:</strong> ${card.Описание}</p>
@@ -55,14 +59,15 @@ function renderCards(cards) {
                     >
                         Добавить в корзину
                     </button>
-
                 </div>
-
             </div>
-            `;
+        `;
     });
 }
 
+// =========================
+// FILTERS
+// =========================
 function createCollectionChips(cards) {
     const container = document.getElementById("filters");
 
@@ -117,6 +122,9 @@ function createCollectionChips(cards) {
 
 loadCards();
 
+// =========================
+// CART LOGIC
+// =========================
 function changeQty(article, delta) {
     const input = document.getElementById(`qty-${article}`);
 
@@ -163,9 +171,11 @@ function updateCartCounter() {
     document.getElementById("cartCounter").textContent = total;
 }
 
+// =========================
+// CART MODAL
+// =========================
 function openCart() {
     const modal = document.getElementById("cartModal");
-
     const container = document.getElementById("cartItems");
 
     container.innerHTML = "";
@@ -176,11 +186,7 @@ function openCart() {
         cart.forEach((item) => {
             container.innerHTML += `
                 <p>
-                    ${item.article}
-                    —
-                    ${item.name}
-                    —
-                    ${item.qty} шт
+                    ${item.article} — ${item.name} — ${item.qty} шт
                 </p>
             `;
         });
@@ -193,6 +199,9 @@ function closeCart() {
     document.getElementById("cartModal").style.display = "none";
 }
 
+// =========================
+// SEND ORDER (Vercel API)
+// =========================
 async function sendOrder() {
     if (cart.length === 0) {
         alert("Корзина пуста");
@@ -201,36 +210,35 @@ async function sendOrder() {
 
     const payload = {
         storeName: document.getElementById("storeName").value,
-
         contactName: document.getElementById("contactName").value,
-
         phone: document.getElementById("phone").value,
-
         email: document.getElementById("email").value,
-
         comment: document.getElementById("comment").value,
-
         cart,
     };
 
-    const response = await fetch("http://31.57.105.93/api/send-order", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "x-api-key": "skdkcwe2323nlf",
-        },
-        body: JSON.stringify(payload),
-    });
+    try {
+        const response = await fetch("/api/send-order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
 
-    if (response.ok) {
-        alert("Заказ отправлен");
+        const data = await response.json();
 
-        cart = [];
+        if (data.success) {
+            alert("Заказ отправлен");
 
-        updateCartCounter();
-
-        closeCart();
-    } else {
-        alert("Ошибка отправки");
+            cart = [];
+            updateCartCounter();
+            closeCart();
+        } else {
+            alert("Ошибка отправки");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Ошибка сети");
     }
 }
