@@ -208,13 +208,16 @@ async function sendOrder() {
         cart,
     };
 
-    const response = await fetch("/api/send-order", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+    const response = await fetch(
+        "https://bumi-catalog-cards.papershistory.workers.dev/",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-    });
+    );
 
     const data = await response.json().catch(() => ({}));
 
