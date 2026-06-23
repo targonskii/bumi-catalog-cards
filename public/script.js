@@ -232,11 +232,13 @@ function closeCart() {
 async function sendOrder() {
     const payload = { cart };
 
-    const res = await fetch("/send-order", {
+    const res = await fetch("https://bumi-catalog-cards.pages.dev/send-order", {
         method: "POST",
+
         headers: {
             "Content-Type": "application/json",
         },
+
         body: JSON.stringify(payload),
     });
 

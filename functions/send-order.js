@@ -82,34 +82,82 @@ export async function onRequestPost(context) {
         const body = await context.request.json();
 
         const {
-            storeName,
-            contactName,
-            phone,
-            email,
-            comment,
+            storeName = "",
+            contactName = "",
+            phone = "",
+            email = "",
+            comment = "",
             cart = [],
         } = body;
+
+        if (!Array.isArray(cart) || cart.length === 0) {
+            return Response.json(
+                { ok: false, error: "Cart is empty" },
+                { status: 400 },
+            );
+        }
 
         const token = context.env.TELEGRAM_BOT_TOKEN;
         const chatId = context.env.TELEGRAM_CHAT_ID;
 
-        let text = `📦 Новый заказ\n\n`;
+        if (!token || !chatId) {
+            return Response.json(
+                { ok: false, error: "Env not set" },
+                { status: 500 },
+            );
+        }
+
+        let text = `📦 НОВЫЙ ЗАКАЗ\n\n`;
+
+        if (storeName) text += `🏪 ${storeName}\n`;
+        if (contactName) text += `👤 ${contactName}\n`;
+        if (phone) text += `📞 ${phone}\n`;
+        if (email) text += `✉️ ${email}\n`;
+        if (comment) text += `📝 ${comment}\n`;
+
+        text += `\n━━━━━━━━━━\n`;
+
+        let totalQty = 0;
 
         cart.forEach((item) => {
-            text += `${item.article} - ${item.name} x${item.qty}\n`;
+            const article = item.article || "-";
+            const name = item.name || "-";
+            const qty = Number(item.qty || 0);
+
+            totalQty += qty;
+
+            text += `${article} | ${name} | x${qty}\n`;
         });
 
-        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text,
-            }),
-        });
+        text += `━━━━━━━━━━\n`;
+        text += `ИТОГО: ${totalQty}`;
+
+        const tgRes = await fetch(
+            `https://api.telegram.org/bot${token}/sendMessage`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text,
+                }),
+            },
+        );
+
+        const tgData = await tgRes.json();
+
+        if (!tgData.ok) {
+            return Response.json(
+                { ok: false, error: "Telegram failed" },
+                { status: 500 },
+            );
+        }
 
         return Response.json({ ok: true });
     } catch (e) {
-        return Response.json({ ok: false }, { status: 500 });
+        return Response.json(
+            { ok: false, error: "Server error" },
+            { status: 500 },
+        );
     }
 }
