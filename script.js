@@ -201,36 +201,30 @@ async function sendOrder() {
 
     const payload = {
         storeName: document.getElementById("storeName").value,
-
         contactName: document.getElementById("contactName").value,
-
         phone: document.getElementById("phone").value,
-
         email: document.getElementById("email").value,
-
         comment: document.getElementById("comment").value,
-
         cart,
     };
 
-    const response = await fetch("http://31.57.105.93/api/send-order", {
+    const response = await fetch("/api/send-order", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": "skdkcwe2323nlf",
         },
         body: JSON.stringify(payload),
     });
 
-    if (response.ok) {
+    const data = await response.json().catch(() => ({}));
+
+    if (response.ok && data.success) {
         alert("Заказ отправлен");
 
         cart = [];
-
         updateCartCounter();
-
         closeCart();
     } else {
-        alert("Ошибка отправки");
+        alert(data.error || "Ошибка отправки");
     }
 }
