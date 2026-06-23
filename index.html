@@ -59,6 +59,34 @@
                 height: 40px;
                 object-fit: contain;
             }
+
+            .chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 20px 0 30px;
+            }
+
+            .chip {
+                border: 1px solid #ddd;
+                background: white;
+                color: #333;
+                border-radius: 999px;
+                padding: 8px 16px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .chip:hover {
+                transform: translateY(-1px);
+            }
+
+            .chip.active {
+                background: #c97b63;
+                border-color: #c97b63;
+                color: white;
+            }
         </style>
     </head>
 
@@ -66,6 +94,10 @@
         <div class="header">
             <img src="logo.png" alt="logo" class="logo" />
             <h1>BUMI CATALOG CARDS</h1>
+        </div>
+
+        <div id="filters" class="chips">
+            <button class="chip active" data-collection="all">Все</button>
         </div>
 
         <div class="catalog" id="catalog"></div>
