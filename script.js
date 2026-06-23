@@ -213,7 +213,7 @@ async function sendOrder() {
         cart,
     };
 
-    const response = await fetch("http://31.57.105.93/api/send-order", {
+    const response = await fetch("https://31.57.105.93/api/send-order", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
