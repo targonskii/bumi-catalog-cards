@@ -193,22 +193,46 @@ function closeCart() {
     document.getElementById("cartModal").style.display = "none";
 }
 
+// async function sendOrder() {
+//     if (cart.length === 0) {
+//         alert("Корзина пуста");
+//         return;
+//     }
+
+//     const payload = {
+//         storeName: document.getElementById("storeName").value,
+//         contactName: document.getElementById("contactName").value,
+//         phone: document.getElementById("phone").value,
+//         email: document.getElementById("email").value,
+//         comment: document.getElementById("comment").value,
+//         cart,
+//     };
+
+//     const response = await fetch("/api/send-order", {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(payload),
+//     });
+
+//     const data = await response.json().catch(() => ({}));
+
+//     if (response.ok && data.success) {
+//         alert("Заказ отправлен");
+
+//         cart = [];
+//         updateCartCounter();
+//         closeCart();
+//     } else {
+//         alert(data.error || "Ошибка отправки");
+//     }
+// }
+
 async function sendOrder() {
-    if (cart.length === 0) {
-        alert("Корзина пуста");
-        return;
-    }
+    const payload = { cart };
 
-    const payload = {
-        storeName: document.getElementById("storeName").value,
-        contactName: document.getElementById("contactName").value,
-        phone: document.getElementById("phone").value,
-        email: document.getElementById("email").value,
-        comment: document.getElementById("comment").value,
-        cart,
-    };
-
-    const response = await fetch("/api/send-order", {
+    const res = await fetch("/send-order", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -216,15 +240,11 @@ async function sendOrder() {
         body: JSON.stringify(payload),
     });
 
-    const data = await response.json().catch(() => ({}));
+    const data = await res.json();
 
-    if (response.ok && data.success) {
+    if (data.ok) {
         alert("Заказ отправлен");
-
-        cart = [];
-        updateCartCounter();
-        closeCart();
     } else {
-        alert(data.error || "Ошибка отправки");
+        alert("Ошибка");
     }
 }
